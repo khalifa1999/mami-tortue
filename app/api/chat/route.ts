@@ -81,9 +81,12 @@ export async function POST(request: NextRequest) {
         duration = Math.max(1, Math.round(responseText.length / 12));
       } catch (elevenLabsError) {
         // Log ElevenLabs error but continue with text-only response
+        const errorMessage = elevenLabsError instanceof Error 
+          ? elevenLabsError.message 
+          : String(elevenLabsError);
         console.warn(
           "ElevenLabs TTS failed, falling back to text-only:",
-          elevenLabsError.message
+          errorMessage
         );
         // Continue without audio - this is not a failure of the overall request
       }

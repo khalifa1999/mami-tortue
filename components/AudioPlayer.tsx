@@ -36,19 +36,24 @@ export default function AudioPlayer({
 
   useEffect(() => {
     if (typeof window !== "undefined" && audioRef.current) {
-      audioRef.current.addEventListener("timeupdate", () => {
-        setCurrentTime(audioRef.current.currentTime);
-      });
+      const handleTimeUpdate = () => {
+        if (audioRef.current) {
+          setCurrentTime(audioRef.current.currentTime);
+        }
+      };
 
-      audioRef.current.addEventListener("ended", () => {
+      const handleEnded = () => {
         setIsPlaying(false);
         setCurrentTime(0);
-      });
+      };
+
+      audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
+      audioRef.current.addEventListener("ended", handleEnded);
 
       return () => {
         if (audioRef.current) {
-          audioRef.current.removeEventListener("timeupdate", () => {});
-          audioRef.current.removeEventListener("ended", () => {});
+          audioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
+          audioRef.current.removeEventListener("ended", handleEnded);
         }
       };
     }

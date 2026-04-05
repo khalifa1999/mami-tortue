@@ -3,12 +3,37 @@
 import { useState, useEffect } from "react";
 
 // Extend the Window interface to include SpeechRecognition types
-interface Window {
-  SpeechRecognition: typeof webkitSpeechRecognition;
-  webkitSpeechRecognition: {
-    prototype: SpeechRecognition;
-    new(): SpeechRecognition;
-  };
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: {
+      prototype: any;
+      new(): any;
+    };
+  }
+  
+   interface SpeechRecognitionEvent extends Event {
+     results: SpeechRecognitionResultList;
+     error: string;
+   }
+  
+   interface SpeechRecognitionResultList {
+     readonly length: number;
+     item(index: number): SpeechRecognitionResult;
+     [index: number]: SpeechRecognitionResult;
+   }
+   
+   interface SpeechRecognitionResult {
+     readonly length: number;
+     item(index: number): SpeechRecognitionAlternative;
+     [index: number]: SpeechRecognitionAlternative;
+     readonly isFinal: boolean;
+   }
+  
+   interface SpeechRecognitionAlternative {
+     readonly transcript: string;
+     readonly confidence: number;
+   }
 }
 
 interface VoiceInputProps {
